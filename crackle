@@ -4,7 +4,7 @@ PKGS_DIR=${PKGS_DIR:-/var/log};
 APTCACHE=${APTCACHE:-/apt/cache};
 CRACKDIR=$HOME/packages/$2;
 SCRP_DIR=$(dirname "${BASH_SOURCE[0]}")
-APT="apt-get -o Dir::Cache=$PKG_PATH$APTCACHE -o Dir::State=$PKG_PATH$APTCACHE"
+APT="apt-get -y -a armhf -o Dir::Cache=$PKG_PATH$APTCACHE -o Dir::State=$PKG_PATH$APTCACHE"
 [ "$1" = "clean" ] && {
     $APT "$1";
     find -L "$PKG_PATH"/bin -wholename "$PKG_PATH"/bin -o -type d -prune -o -type l -exec rm {} +;
@@ -59,7 +59,7 @@ APT="apt-get -o Dir::Cache=$PKG_PATH$APTCACHE -o Dir::State=$PKG_PATH$APTCACHE"
             [ -d "$PKG_PATH" ] || { echo "$PKG_PATH does not exist, please run crackle setup first"; exit 1; }
     }
     [ -d "$dir$PKGS_DIR/$2" ] && { echo "$2" is already installed; exit 0; }
-    $APT "$op" --assume-yes --download-only "$2" || exit 1;
+    $APT "$op" --download-only "$2" || exit 1;
     readarray -t packages < <(ls $PKG_PATH/apt/cache/archives/*.deb);
     for package in "${packages[@]}"
         do
